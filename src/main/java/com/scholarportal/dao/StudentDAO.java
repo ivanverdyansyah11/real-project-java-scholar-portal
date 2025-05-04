@@ -94,7 +94,7 @@ public class StudentDAO {
 
         try {
             conn = DBUtil.getConnection();
-            String sql = "SELECT * FROM students WHERE name LIKE ? OR username LIKE ? OR subject LIKE ?";
+            String sql = "SELECT * FROM students WHERE id LIKE ? OR name LIKE ?";
             stmt = conn.prepareStatement(sql);
             String searchPattern = "%" + keyword + "%";
             stmt.setString(1, searchPattern);
