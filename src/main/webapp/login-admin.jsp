@@ -32,6 +32,7 @@
                     <button type="submit" class="button-primary" style="width: 100%; text-align: center;">Login</button>
                 </div>
             </form>
+            <p class="authenticate-redirect">Move to login student? <a href="login-student.jsp" class="redirect-link">Login Student</a></p>
         </div>
 
         <script src="<%=request.getContextPath()%>/assets/js/script.js"></script>

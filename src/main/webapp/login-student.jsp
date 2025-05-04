@@ -31,6 +31,7 @@
                     <button type="submit" class="button-primary" style="width: 100%; text-align: center;">Login</button>
                 </div>
             </form>
+            <p class="authenticate-redirect">Move to login admin? <a href="login-admin.jsp" class="redirect-link">Login Admin</a></p>
         </div>
 
         <script src="<%=request.getContextPath()%>/assets/js/script.js"></script>
