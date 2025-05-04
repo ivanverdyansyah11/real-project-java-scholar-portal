@@ -19,7 +19,7 @@
             <% if (request.getAttribute("errorMessage") != null) { %>
             <p class="alert alert-failed"><%= request.getAttribute("errorMessage") %></p>
             <% } %>
-            <form class="form" style="grid-template-columns: auto;">
+            <form action="AdminLoginServlet" method="post" class="form" style="grid-template-columns: auto;">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" class="input" name="username" required placeholder="Enter your username...">

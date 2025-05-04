@@ -1,5 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%
+    Admin admin = (Admin) session.getAttribute("admin");
+    Student student = (Student) session.getAttribute("student");
+
+    if (admin == null) {
+        response.sendRedirect("login-admin.jsp");
+        return;
+    }
+
+    List<Student> students = (List<Student>) request.getAttribute("students");
+    String search = (String) request.getAttribute("search");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+%>
 
 <!doctype html>
 <html lang="en">
@@ -20,8 +35,16 @@
                          class="brand-logo">
                 </a>
                 <div class="navbar-link">
-                    <a href="<%=request.getContextPath()%>/all-student" class="link-item">Student</a>
-                    <a href="<%=request.getContextPath()%>/" class="link-item">Logout</a>
+                    <%
+                        if (admin != null) {
+                    %>
+                    <a class="link-item" href="AllStudentServlet">Student</a>
+                    <% } else if (student != null) { %>
+                    <a class="link-item" href="ProfileStudentServlet">My Profile</a>
+                    <% } %>
+                    <% if (admin != null || student != null) { %>
+                    <a href="LogoutServlet" class="link-item">Logout</a>
+                    <% } %>
                 </div>
             </div>
         </nav>
@@ -30,13 +53,17 @@
             <div class="content">
                 <div class="content-header">
                     <h4 class="header-title">All Students</h4>
-                    <a href="<%=request.getContextPath()%>/create-student" class="button-primary">Add New Student</a>
+                    <a href="CreateStudentServlet" class="button-primary">Add New Student</a>
                 </div>
-                <p class="alert alert-success">Lorem ipsum dolor sit amet.</p>
-                <p class="alert alert-failed">Lorem ipsum dolor sit amet.</p>
-                <form action="<%=request.getContextPath()%>/all-student" method="GET" class="content-search">
+                <% if (request.getAttribute("successMessage") != null) { %>
+                <p class="alert alert-success"><%= request.getAttribute("successMessage") %></p>
+                <% } %>
+                <% if (request.getAttribute("errorMessage") != null) { %>
+                    <p class="alert alert-failed"><%= request.getAttribute("errorMessage") %></p>
+                <% } %>
+                <form action="AllStudentServlet" method="get" class="content-search">
                     <input type="search" class="input" name="search" placeholder="Search by name or ID..."
-                           value="${searchTerm}" style="width: 100%;">
+                           value="<%= search != null ? search : "" %>" style="width: 100%;">
                     <button type="submit" class="button-secondary">Search</button>
                 </form>
                 <table class="table">
@@ -44,6 +71,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Username</th>
                             <th>GPA</th>
                             <th>Subject</th>
                             <th>Enrollment Date</th>
@@ -51,159 +79,42 @@
                         </tr>
                     </thead>
                     <tbody>
-<%--                    <tr>--%>
-<%--                        <td colspan="6" style="text-align:center;">No students found.</td>--%>
-<%--                    </tr>--%>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Student</td>
-                            <td>4.00</td>
-                            <td>RPL</td>
-                            <td>5/4/2025</td>
-                            <td>
-                                <div class="action-button">
-                                    <a href="<%=request.getContextPath()%>/detail-student?id=1"
-                                       class="button button-detail">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
-                                             alt="Detail Icon" class="icon">
-                                    </a>
-                                    <a href="<%=request.getContextPath()%>/edit-student?id=1"
-                                       class="button button-edit">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
-                                             alt="Edit Icon" class="icon">
-                                    </a>
-                                    <button type="button" class="button button-delete" onclick="confirm('Are you sure want to delete this student?')">
-                                        <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
-                                             alt="Delete Icon" class="icon">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        <% if (students != null && !students.isEmpty()) { %>
+                            <% for (Student s : students) { %>
+                                <tr>
+                                    <td><%= s.getId() %></td>
+                                    <td><%= s.getName() %></td>
+                                    <td><%= s.getUsername() %></td>
+                                    <td><%= String.format("%.2f", s.getGpa()) %></td>
+                                    <td><%= s.getSubject() %></td>
+                                    <td><%= dateFormat.format(s.getEnrollmentDate()) %></td>
+                                    <td>
+                                        <div class="action-button">
+                                            <a href="DetailStudentServlet?id=<%= s.getId() %>"
+                                               class="button button-detail">
+                                                <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
+                                                     alt="Detail Icon" class="icon">
+                                            </a>
+                                            <a href="EditStudentServlet?id=<%= s.getId() %>"
+                                               class="button button-edit">
+                                                <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
+                                                     alt="Edit Icon" class="icon">
+                                            </a>
+                                            <a href="DeleteStudentServlet?id=<%= s.getId() %>"
+                                               class="button button-delete"
+                                               onclick="return confirm('Are you sure want to delete this student?');">
+                                                <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
+                                                     alt="Delete Icon" class="icon">
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" style="text-align:center;">No students found.</td>
+                            </tr>
+                        <% } %>
                     </tbody>
                 </table>
             </div>

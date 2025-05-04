@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student" %>
+<%
+    Admin admin = (Admin) session.getAttribute("admin");
+    Student student = (Student) session.getAttribute("student");
+
+    if (admin == null && student == null) {
+        response.sendRedirect("login-student.jsp");
+        return;
+    }
+%>
 
 <!doctype html>
 <html lang="en">
@@ -20,8 +29,16 @@
                          class="brand-logo">
                 </a>
                 <div class="navbar-link">
-                    <a href="<%=request.getContextPath()%>/all-student" class="link-item">Student</a>
-                    <a href="<%=request.getContextPath()%>/" class="link-item">Logout</a>
+                    <%
+                        if (admin != null) {
+                    %>
+                        <a class="link-item" href="AllStudentServlet">Student</a>
+                    <% } else if (student != null) { %>
+                        <a class="link-item" href="ProfileStudentServlet">My Profile</a>
+                    <% } %>
+                    <% if (admin != null || student != null) { %>
+                        <a href="LogoutServlet" class="link-item">Logout</a>
+                    <% } %>
                 </div>
             </div>
         </nav>

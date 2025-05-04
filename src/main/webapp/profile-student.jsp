@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, java.text.SimpleDateFormat" %>
+<%
+    Admin admin = (Admin) session.getAttribute("admin");
+    Student student = (Student) session.getAttribute("student");
+
+    if (student == null) {
+        response.sendRedirect("AllStudentServlet");
+        return;
+    }
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+%>
 
 <!doctype html>
 <html lang="en">
@@ -20,7 +31,16 @@
                          class="brand-logo">
                 </a>
                 <div class="navbar-link">
-                    <a href="<%=request.getContextPath()%>/" class="link-item">Logout</a>
+                    <%
+                        if (admin != null) {
+                    %>
+                    <a class="link-item" href="AllStudentServlet">Student</a>
+                    <% } else if (student != null) { %>
+                    <a class="link-item" href="ProfileStudentServlet">My Profile</a>
+                    <% } %>
+                    <% if (admin != null || student != null) { %>
+                    <a href="LogoutServlet" class="link-item">Logout</a>
+                    <% } %>
                 </div>
             </div>
         </nav>
@@ -30,23 +50,28 @@
                 <div class="content-header">
                     <h4 class="header-title">Profile Student</h4>
                 </div>
-                <p class="alert alert-failed">Lorem ipsum dolor sit amet.</p>
-                <form class="form" style="grid-template-columns: auto auto;">
+                <% if (request.getAttribute("successMessage") != null) { %>
+                <p class="alert alert-success"><%= request.getAttribute("successMessage") %></p>
+                <% } %>
+                <% if (request.getAttribute("errorMessage") != null) { %>
+                    <p class="alert alert-failed"><%= request.getAttribute("errorMessage") %></p>
+                <% } %>
+                <form class="form" style="grid-template-columns: auto auto;" method="post" action="ProfileStudentServlet">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" class="input" name="name" required placeholder="Enter your name...">
+                        <input type="text" id="name" class="input" name="name" required placeholder="Enter your name..." value="<%= student.getName() %>">
                     </div>
                     <div class="form-group">
                         <label for="gpa">GPA</label>
-                        <input type="text" id="gpa" class="input" name="gpa" required placeholder="Enter your gpa...">
+                        <input type="text" id="gpa" class="input" name="gpa" required placeholder="Enter your gpa..." value="<%= student.getGpa() %>">
                     </div>
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input type="text" id="subject" class="input" name="subject" required placeholder="Enter your subject...">
+                        <input type="text" id="subject" class="input" name="subject" required placeholder="Enter your subject..." value="<%= student.getSubject() %>">
                     </div>
                     <div class="form-group">
                         <label for="enrollment_date">Enrollment Date</label>
-                        <input type="date" id="enrollment_date" class="input" name="enrollment_date" required>
+                        <input type="date" id="enrollment_date" class="input" name="enrollment_date" required value="<%= dateFormat.format(student.getEnrollmentDate()) %>">
                     </div>
                     <div class="button-group" style="grid-column: 1/3;">
                         <button type="submit" class="button-primary" style="width: 100%; text-align: center;">Save Changes</button>

@@ -6,9 +6,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebFilter("/*")
 public class AuthenticationFilter implements Filter {
+
+    // Pages accessible without login
+    private static final List<String> publicPages = Arrays.asList(
+            "/login-admin.jsp",
+            "/login-student.jsp",
+            "/AdminLoginServlet",
+            "/StudentLoginServlet"
+    );
+
+    // Pages accessible only by admin
+    private static final List<String> adminOnlyPages = Arrays.asList(
+            "/all-student.jsp",
+            "/create-student.jsp",
+            "/detail-student.jsp",
+            "/edit-student.jsp",
+            "/AllStudentServlet",
+            "/CreateStudentServlet",
+            "/DetailStudentServlet",
+            "/EditStudentServlet",
+            "/DeleteStudentServlet"
+    );
+
+    // Pages accessible only by student
+    private static final List<String> studentOnlyPages = Arrays.asList(
+            "/profile-student.jsp",
+            "/ProfileStudentServlet"
+    );
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -22,54 +51,53 @@ public class AuthenticationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
 
-        String uri = httpRequest.getRequestURI();
+        String requestURI = httpRequest.getRequestURI();
         String contextPath = httpRequest.getContextPath();
+        String path = requestURI.substring(contextPath.length());
 
-        // Public resources that don't need authentication
-        boolean isStaticResource = uri.contains("/assets/");
-        boolean isLoginPage = uri.equals(contextPath + "/login-admin.jsp") ||
-                uri.equals(contextPath + "/login-student.jsp") ||
-                uri.equals(contextPath + "/login-admin") ||
-                uri.equals(contextPath + "/login-student");
-
-        // Check if the user is logged in
-        boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
-        boolean isAdmin = isLoggedIn && session.getAttribute("userType").equals("admin");
-        boolean isStudent = isLoggedIn && session.getAttribute("userType").equals("student");
-
-        // Rules based on user roles and requested pages
-        if (isStaticResource) {
-            // Allow access to static resources for everyone
+        // Check if requested resource is a static resource
+        if (path.matches(".*\\.(css|jpg|jpeg|png|gif|js)")) {
             chain.doFilter(request, response);
             return;
-        } else if (!isLoggedIn && !isLoginPage) {
-            // If not logged in, redirect to the appropriate login page, default to student login
-            httpResponse.sendRedirect(contextPath + "/login-student.jsp");
-            return;
-        } else if (isLoggedIn && isLoginPage) {
-            // If already logged in, redirect to index
-            httpResponse.sendRedirect(contextPath + "/");
-            return;
-        } else if (isAdmin) {
-            // Admin access restrictions
-            if (uri.contains("/profile-student")) {
-                httpResponse.sendRedirect(contextPath + "/");
-                return;
-            }
-        } else if (isStudent) {
-            // Student access restrictions
-            if (uri.contains("/all-student") ||
-                    uri.contains("/create-student") ||
-                    uri.contains("/detail-student") ||
-                    uri.contains("/edit-student")) {
+        }
 
-                httpResponse.sendRedirect(contextPath + "/");
+        // Default page is index.jsp
+        if (path.equals("/") || path.equals("") || path.equals("/index.jsp")) {
+            if (session == null || (session.getAttribute("admin") == null && session.getAttribute("student") == null)) {
+                httpResponse.sendRedirect(contextPath + "/login-student.jsp");
                 return;
             }
         }
 
-        // Continue the filter chain
+        // Check if user is logged in
+        boolean isLoggedIn = (session != null && (session.getAttribute("admin") != null || session.getAttribute("student") != null));
+        boolean isAdmin = (session != null && session.getAttribute("admin") != null);
+        boolean isStudent = (session != null && session.getAttribute("student") != null);
+        boolean isPublicPage = isPublicPage(path);
+
+        // Rule 1: If not logged in, redirect to login if trying to access protected page
+        if (!isLoggedIn && !isPublicPage) {
+            httpResponse.sendRedirect(contextPath + "/login-student.jsp");
+            return;
+        }
+
+        // Rule 2: If logged in as admin, block access to login and student profile pages
+        if (isAdmin && (isPublicPage || studentOnlyPages.contains(path))) {
+            httpResponse.sendRedirect(contextPath + "/index.jsp");
+            return;
+        }
+
+        // Rule 3: If logged in as student, block access to login and admin-only pages
+        if (isStudent && (isPublicPage || adminOnlyPages.contains(path))) {
+            httpResponse.sendRedirect(contextPath + "/index.jsp");
+            return;
+        }
+
         chain.doFilter(request, response);
+    }
+
+    private boolean isPublicPage(String path) {
+        return publicPages.contains(path);
     }
 
     @Override

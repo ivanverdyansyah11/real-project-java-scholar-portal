@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, java.text.SimpleDateFormat" %>
+<%
+    Admin admin = (Admin) session.getAttribute("admin");
+    Student student = (Student) request.getAttribute("student");
+
+    if (admin == null) {
+        response.sendRedirect("login-admin.jsp");
+        return;
+    }
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+%>
 
 <!doctype html>
 <html lang="en">
@@ -20,8 +31,16 @@
                          class="brand-logo">
                 </a>
                 <div class="navbar-link">
-                    <a href="<%=request.getContextPath()%>/all-student" class="link-item">Student</a>
-                    <a href="<%=request.getContextPath()%>/" class="link-item">Logout</a>
+                    <%
+                        if (admin != null) {
+                    %>
+                    <a class="link-item" href="AllStudentServlet">Student</a>
+                    <% } else if (student != null) { %>
+                    <a class="link-item" href="ProfileStudentServlet">My Profile</a>
+                    <% } %>
+                    <% if (admin != null || student != null) { %>
+                    <a href="LogoutServlet" class="link-item">Logout</a>
+                    <% } %>
                 </div>
             </div>
         </nav>
@@ -31,26 +50,29 @@
                 <div class="content-header">
                     <h4 class="header-title">Detail Student</h4>
                 </div>
-                <p class="alert alert-failed">Lorem ipsum dolor sit amet.</p>
                 <form class="form" style="grid-template-columns: auto auto;">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" class="input" name="name" readonly placeholder="Enter your name...">
+                        <input type="text" id="name" class="input" name="name" readonly placeholder="Enter your name..." value="<%= student.getName() %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="input" name="username" readonly placeholder="Enter your username..." value="<%= student.getUsername() %>">
                     </div>
                     <div class="form-group">
                         <label for="gpa">GPA</label>
-                        <input type="text" id="gpa" class="input" name="gpa" readonly placeholder="Enter your gpa...">
+                        <input type="text" id="gpa" class="input" name="gpa" readonly placeholder="Enter your gpa..." value="<%= String.format("%.2f", student.getGpa()) %>">
                     </div>
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input type="text" id="subject" class="input" name="subject" readonly placeholder="Enter your subject...">
+                        <input type="text" id="subject" class="input" name="subject" readonly placeholder="Enter your subject..." value="<%= student.getSubject() %>">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="grid-column: 1/3;">
                         <label for="enrollment_date">Enrollment Date</label>
-                        <input type="date" id="enrollment_date" class="input" name="enrollment_date" readonly>
+                        <input type="date" id="enrollment_date" class="input" name="enrollment_date" readonly value="<%= dateFormat.format(student.getEnrollmentDate()) %>">
                     </div>
                     <div class="button-group" style="grid-column: 1/3;">
-                        <a href="<%=request.getContextPath()%>/all-student" class="button-secondary" style="width: 100%; text-align: center;">Back to All Student Page</a>
+                        <a href="AllStudentServlet" class="button-secondary" style="width: 100%; text-align: center;">Back to All Student Page</a>
                     </div>
                 </form>
             </div>
