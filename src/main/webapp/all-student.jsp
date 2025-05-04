@@ -66,7 +66,7 @@
                            value="<%= search != null ? search : "" %>" style="width: 100%;">
                     <button type="submit" class="button-secondary">Search</button>
                 </form>
-                <table class="table">
+                <table class="table" style="display: inline-block;">
                     <thead>
                         <tr>
                             <th>ID</th>
