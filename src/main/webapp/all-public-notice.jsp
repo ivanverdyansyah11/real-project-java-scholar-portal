@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, com.scholarportal.model.PublicNotice" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%
@@ -11,7 +11,7 @@
         return;
     }
 
-    List<Student> students = (List<Student>) request.getAttribute("students");
+    List<PublicNotice> publicNotices = (List<PublicNotice>) request.getAttribute("publicNotices");
     String search = (String) request.getAttribute("search");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 %>
@@ -21,7 +21,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>All Student Page | Student Management System</title>
+        <title>All Public Notice Page | Student Management System</title>
 
         <%-- STYLE CSS --%>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/style.css">
@@ -53,8 +53,8 @@
         <div class="container container-content">
             <div class="content">
                 <div class="content-header">
-                    <h4 class="header-title">All Students</h4>
-                    <a href="CreateStudentServlet" class="button-primary">Add New Student</a>
+                    <h4 class="header-title">All Public Notices</h4>
+                    <a href="CreatePublicNoticeServlet" class="button-primary">Add New Public Notice</a>
                 </div>
                 <% if (request.getAttribute("successMessage") != null) { %>
                 <p class="alert alert-success"><%= request.getAttribute("successMessage") %></p>
@@ -62,7 +62,7 @@
                 <% if (request.getAttribute("errorMessage") != null) { %>
                     <p class="alert alert-failed"><%= request.getAttribute("errorMessage") %></p>
                 <% } %>
-                <form action="AllStudentServlet" method="get" class="content-search">
+                <form action="AllPublicNoticeServlet" method="get" class="content-search">
                     <input type="search" class="input" name="search" placeholder="Search by name or ID..."
                            value="<%= search != null ? search : "" %>" style="width: 100%;">
                     <button type="submit" class="button-secondary">Search</button>
@@ -72,38 +72,32 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Username</th>
-                            <th>GPA</th>
-                            <th>Subject</th>
-                            <th>Enrollment Date</th>
+                            <th>Description</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% if (students != null && !students.isEmpty()) { %>
-                            <% for (Student s : students) { %>
+                        <% if (publicNotices != null && !publicNotices.isEmpty()) { %>
+                            <% for (PublicNotice s : publicNotices) { %>
                                 <tr>
                                     <td><%= s.getId() %></td>
                                     <td><%= s.getName() %></td>
-                                    <td><%= s.getUsername() %></td>
-                                    <td><%= String.format("%.2f", s.getGpa()) %></td>
-                                    <td><%= s.getSubject() %></td>
-                                    <td><%= dateFormat.format(s.getEnrollmentDate()) %></td>
+                                    <td><%= s.getDescription() %></td>
                                     <td>
                                         <div class="action-button">
-                                            <a href="DetailStudentServlet?id=<%= s.getId() %>"
+                                            <a href="DetailPublicNoticeServlet?id=<%= s.getId() %>"
                                                class="button button-detail">
                                                 <img src="<%=request.getContextPath()%>/assets/image/icon/detail.svg"
                                                      alt="Detail Icon" class="icon">
                                             </a>
-                                            <a href="EditStudentServlet?id=<%= s.getId() %>"
+                                            <a href="EditPublicNoticeServlet?id=<%= s.getId() %>"
                                                class="button button-edit">
                                                 <img src="<%=request.getContextPath()%>/assets/image/icon/edit.svg"
                                                      alt="Edit Icon" class="icon">
                                             </a>
-                                            <a href="DeleteStudentServlet?id=<%= s.getId() %>"
+                                            <a href="DeletePublicNoticeServlet?id=<%= s.getId() %>"
                                                class="button button-delete"
-                                               onclick="return confirm('Are you sure want to delete this student?');">
+                                               onclick="return confirm('Are you sure want to delete this public notice?');">
                                                 <img src="<%=request.getContextPath()%>/assets/image/icon/delete.svg"
                                                      alt="Delete Icon" class="icon">
                                             </a>
@@ -113,7 +107,7 @@
                             <% } %>
                         <% } else { %>
                             <tr>
-                                <td colspan="7" style="text-align:center;">No students found.</td>
+                                <td colspan="4" style="text-align:center;">No public notices found.</td>
                             </tr>
                         <% } %>
                     </tbody>

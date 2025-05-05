@@ -32,16 +32,18 @@
                     <%
                         if (admin != null) {
                     %>
-                        <a class="link-item" href="AllStudentServlet">Student</a>
+                    <a class="link-item" href="AllStudentServlet">Student</a>
+                    <a class="link-item" href="AllPublicNoticeServlet">Public Notice</a>
                     <% } else if (student != null) { %>
-                        <a class="link-item" href="ProfileStudentServlet">My Profile</a>
+                    <a class="link-item" href="ProfileStudentServlet">My Profile</a>
                     <% } %>
                     <% if (admin != null || student != null) { %>
-                        <a href="LogoutServlet" class="link-item">Logout</a>
+                    <a href="LogoutServlet" class="link-item">Logout</a>
                     <% } %>
                 </div>
             </div>
         </nav>
+
         <div class="container container-content">
             <div class="content">
                 <div class="content-main">

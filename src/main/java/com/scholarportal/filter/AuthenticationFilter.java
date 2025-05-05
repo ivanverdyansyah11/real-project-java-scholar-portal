@@ -26,11 +26,20 @@ public class AuthenticationFilter implements Filter {
             "/create-student.jsp",
             "/detail-student.jsp",
             "/edit-student.jsp",
+            "/all-public-notice.jsp",
+            "/create-public-notice.jsp",
+            "/detail-public-notice.jsp",
+            "/edit-public-notice.jsp",
             "/AllStudentServlet",
             "/CreateStudentServlet",
             "/DetailStudentServlet",
             "/EditStudentServlet",
-            "/DeleteStudentServlet"
+            "/DeleteStudentServlet",
+            "/AllPublicNoticeServlet",
+            "/CreatePublicNoticeServlet",
+            "/DetailPublicNoticeServlet",
+            "/EditPublicNoticeServlet",
+            "/DeletePublicNoticeServlet"
     );
 
     // Pages accessible only by student

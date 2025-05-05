@@ -99,7 +99,6 @@ public class StudentDAO {
             String searchPattern = "%" + keyword + "%";
             stmt.setString(1, searchPattern);
             stmt.setString(2, searchPattern);
-            stmt.setString(3, searchPattern);
             rs = stmt.executeQuery();
 
             while (rs.next()) {

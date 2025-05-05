@@ -33,6 +33,7 @@
                         if (admin != null) {
                     %>
                     <a class="link-item" href="AllStudentServlet">Student</a>
+                    <a class="link-item" href="AllPublicNoticeServlet">Public Notice</a>
                     <% } else if (student != null) { %>
                     <a class="link-item" href="ProfileStudentServlet">My Profile</a>
                     <% } %>

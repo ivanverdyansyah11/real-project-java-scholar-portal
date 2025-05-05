@@ -35,6 +35,7 @@
                         if (admin != null) {
                     %>
                     <a class="link-item" href="AllStudentServlet">Student</a>
+                    <a class="link-item" href="AllPublicNoticeServlet">Public Notice</a>
                     <% } else if (student != null) { %>
                     <a class="link-item" href="ProfileStudentServlet">My Profile</a>
                     <% } %>
@@ -53,19 +54,19 @@
                 <form class="form" style="grid-template-columns: auto auto;">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" class="input" name="name" readonly placeholder="Enter your name..." value="<%= student.getName() %>">
+                        <input type="text" id="name" class="input" name="name" readonly placeholder="Enter student name..." value="<%= student.getName() %>">
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" class="input" name="username" readonly placeholder="Enter your username..." value="<%= student.getUsername() %>">
+                        <input type="text" id="username" class="input" name="username" readonly placeholder="Enter student username..." value="<%= student.getUsername() %>">
                     </div>
                     <div class="form-group">
                         <label for="gpa">GPA</label>
-                        <input type="text" id="gpa" class="input" name="gpa" readonly placeholder="Enter your gpa..." value="<%= String.format("%.2f", student.getGpa()) %>">
+                        <input type="text" id="gpa" class="input" name="gpa" readonly placeholder="Enter student gpa..." value="<%= String.format("%.2f", student.getGpa()) %>">
                     </div>
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input type="text" id="subject" class="input" name="subject" readonly placeholder="Enter your subject..." value="<%= student.getSubject() %>">
+                        <input type="text" id="subject" class="input" name="subject" readonly placeholder="Enter student subject..." value="<%= student.getSubject() %>">
                     </div>
                     <div class="form-group" style="grid-column: 1/3;">
                         <label for="enrollment_date">Enrollment Date</label>

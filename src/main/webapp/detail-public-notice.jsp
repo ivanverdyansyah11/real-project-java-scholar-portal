@@ -1,11 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, java.text.SimpleDateFormat" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, com.scholarportal.model.PublicNotice, java.text.SimpleDateFormat" %>
 <%
     Admin admin = (Admin) session.getAttribute("admin");
-    Student student = (Student) session.getAttribute("student");
+    Student student = (Student) request.getAttribute("student");
+    PublicNotice publicNotice = (PublicNotice) request.getAttribute("publicNotice"); // Ambil object publicNotice dari request
 
-    if (student == null) {
-        response.sendRedirect("AllStudentServlet");
+    if (admin == null) {
+        response.sendRedirect("login-admin.jsp");
+        return;
+    }
+
+    if (publicNotice == null) {
+        response.sendRedirect("AllPublicNoticeServlet");
         return;
     }
 
@@ -17,7 +23,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Profile Student Page | Student Management System</title>
+        <title>Detail Public Notice Page | Student Management System</title>
 
         <%-- STYLE CSS --%>
         <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/style.css">
@@ -49,33 +55,19 @@
         <div class="container container-content">
             <div class="content">
                 <div class="content-header">
-                    <h4 class="header-title">Profile Student</h4>
+                    <h4 class="header-title">Detail Public Notice</h4>
                 </div>
-                <% if (request.getAttribute("successMessage") != null) { %>
-                <p class="alert alert-success"><%= request.getAttribute("successMessage") %></p>
-                <% } %>
-                <% if (request.getAttribute("errorMessage") != null) { %>
-                    <p class="alert alert-failed"><%= request.getAttribute("errorMessage") %></p>
-                <% } %>
-                <form class="form" style="grid-template-columns: auto auto;" method="post" action="ProfileStudentServlet">
+                <form class="form" style="grid-template-columns: auto;">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" id="name" class="input" name="name" required placeholder="Enter your name..." value="<%= student.getName() %>">
+                        <input type="text" id="name" class="input" name="name" readonly placeholder="Enter public notice name..." value="<%= publicNotice.getName() %>">
                     </div>
                     <div class="form-group">
-                        <label for="gpa">GPA</label>
-                        <input type="text" id="gpa" class="input" name="gpa" required placeholder="Enter your gpa..." value="<%= student.getGpa() %>">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="input" name="description" readonly placeholder="Enter public notice description..." rows="6"><%= publicNotice.getDescription() %></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" id="subject" class="input" name="subject" required placeholder="Enter your subject..." value="<%= student.getSubject() %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="enrollment_date">Enrollment Date</label>
-                        <input type="date" id="enrollment_date" class="input" name="enrollment_date" required value="<%= dateFormat.format(student.getEnrollmentDate()) %>">
-                    </div>
-                    <div class="button-group" style="grid-column: 1/3;">
-                        <button type="submit" class="button-primary" style="width: 100%; text-align: center;">Save Changes</button>
+                    <div class="button-group">
+                        <a href="AllPublicNoticeServlet" class="button-secondary" style="width: 100%; text-align: center;">Back to All Public Notice Page</a>
                     </div>
                 </form>
             </div>
