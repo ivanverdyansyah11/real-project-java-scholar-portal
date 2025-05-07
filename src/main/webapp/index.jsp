@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student" %>
+<%@ page import="com.scholarportal.model.Admin, com.scholarportal.model.Student, com.scholarportal.model.PublicNotice, com.scholarportal.dao.PublicNoticeDAO, java.util.List" %>
 <%
     Admin admin = (Admin) session.getAttribute("admin");
     Student student = (Student) session.getAttribute("student");
@@ -8,6 +8,9 @@
         response.sendRedirect("login-student.jsp");
         return;
     }
+
+    PublicNoticeDAO publicNoticeDAO = new PublicNoticeDAO();
+    List<PublicNotice> publicNotices = publicNoticeDAO.getAllPublicNotices();
 %>
 
 <!doctype html>
@@ -48,35 +51,25 @@
             <div class="content">
                 <div class="content-main">
                     <h2 class="main-title">Public Notices</h2>
-                    <div class="main-feature">
-                        <img src="<%=request.getContextPath()%>/assets/image/icon/info-notice.svg" alt="Info Icon"
-                             class="feature-icon">
-                        <h6 class="feature-title">Notice 1</h6>
-                        <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur
-                            consectetur molestiae inventore animi quia rerum eius quibusdam illum deserunt suscipit?</p>
-                    </div>
-                    <div class="main-feature">
-                        <img src="<%=request.getContextPath()%>/assets/image/icon/info-notice.svg" alt="Info Icon"
-                             class="feature-icon">
-                        <h6 class="feature-title">Notice 2</h6>
-                        <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur
-                            consectetur molestiae inventore animi quia rerum eius quibusdam illum deserunt suscipit?</p>
-                    </div>
-                    <div class="main-feature">
-                        <img src="<%=request.getContextPath()%>/assets/image/icon/info-notice.svg" alt="Info Icon"
-                             class="feature-icon">
-                        <h6 class="feature-title">Notice 3</h6>
-                        <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur
-                            consectetur molestiae inventore animi quia rerum eius quibusdam illum deserunt suscipit?</p>
-                    </div>
+                    <% if (publicNotices != null && !publicNotices.isEmpty()) { %>
+                        <% for (PublicNotice s : publicNotices) { %>
+                            <div class="main-feature">
+                                <img src="<%=request.getContextPath()%>/assets/image/icon/info-notice.svg" alt="Info Icon"
+                                     class="feature-icon">
+                                <h6 class="feature-title"><%= s.getName() %></h6>
+                                <p class="feature-description"><%= s.getDescription() %></p>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <p>No public notices available.</p>
+                    <% } %>
                 </div>
             </div>
         </div>
 
         <footer class="footer container">
             <p class="footer-copyright">
-                &copy; <%= new java.util.Date().getYear() + 1900 %> Scholar's Portal - Student
-                Management System
+                &copy; <%= new java.util.Date().getYear() + 1900 %> Scholar's Portal - Student Management System
             </p>
         </footer>
 
