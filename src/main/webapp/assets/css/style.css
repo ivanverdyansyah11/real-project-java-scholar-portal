@@ -393,6 +393,7 @@ table.table td .action-button .button.button-delete:hover {
 .container-content .content .content-main .main-feature .feature-title {
     font-size: 1rem;
     color: rgba(var(--primary-color), 1);
+    font-weight: 600;
 }
 
 .container-content .content .content-main .main-feature .feature-description {
@@ -402,7 +403,7 @@ table.table td .action-button .button.button-delete:hover {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .container-content .content .content-header,
