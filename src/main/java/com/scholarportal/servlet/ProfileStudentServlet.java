@@ -17,16 +17,13 @@ public class ProfileStudentServlet extends HttpServlet {
         Student student = (Student) session.getAttribute("student");
 
         if (student != null) {
-            // Get fresh data from database
             StudentDAO studentDAO = new StudentDAO();
             Student refreshedStudent = studentDAO.getStudentById(student.getId());
 
             if (refreshedStudent != null) {
-                // Update session with latest data
                 session.setAttribute("student", refreshedStudent);
                 request.getRequestDispatcher("profile-student.jsp").forward(request, response);
             } else {
-                // Should never happen unless student was deleted
                 session.invalidate();
                 response.sendRedirect("login-student.jsp");
             }
@@ -44,7 +41,6 @@ public class ProfileStudentServlet extends HttpServlet {
             return;
         }
 
-        // Ambil parameter dari form
         String name = request.getParameter("name");
         String gpaStr = request.getParameter("gpa");
         String subject = request.getParameter("subject");
@@ -54,11 +50,10 @@ public class ProfileStudentServlet extends HttpServlet {
             double gpa = Double.parseDouble(gpaStr);
             java.sql.Date enrollmentDate = java.sql.Date.valueOf(enrollmentDateStr);
 
-            // Buat objek student yang baru dengan data update
             Student updatedStudent = new Student();
             updatedStudent.setId(sessionStudent.getId());
-            updatedStudent.setUsername(sessionStudent.getUsername()); // tidak diinput user
-            updatedStudent.setPassword(sessionStudent.getPassword()); // tidak diinput user
+            updatedStudent.setUsername(sessionStudent.getUsername());
+            updatedStudent.setPassword(sessionStudent.getPassword());
             updatedStudent.setName(name);
             updatedStudent.setGpa(gpa);
             updatedStudent.setSubject(subject);
@@ -68,7 +63,6 @@ public class ProfileStudentServlet extends HttpServlet {
             boolean success = studentDAO.updateStudent(updatedStudent);
 
             if (success) {
-                // Perbarui session student juga
                 session.setAttribute("student", updatedStudent);
                 request.setAttribute("successMessage", "Successfully updated your profile.");
                 request.getRequestDispatcher("profile-student.jsp").forward(request, response);

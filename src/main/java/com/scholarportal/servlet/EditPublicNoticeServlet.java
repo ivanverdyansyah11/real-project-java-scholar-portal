@@ -22,7 +22,7 @@ public class EditPublicNoticeServlet extends HttpServlet {
                 PublicNotice publicNotice = publicNoticeDAO.getPublicNoticeById(id);
 
                 if (publicNotice != null) {
-                    request.setAttribute("publicNotice", publicNotice);  // Gantilah session.setAttribute menjadi request.setAttribute
+                    request.setAttribute("publicNotice", publicNotice);
                     request.getRequestDispatcher("edit-public-notice.jsp").forward(request, response);
                 } else {
                     response.sendRedirect("AllPublicNoticeServlet");

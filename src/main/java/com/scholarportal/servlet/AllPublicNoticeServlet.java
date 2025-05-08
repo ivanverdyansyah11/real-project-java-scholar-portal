@@ -29,7 +29,7 @@ public class AllPublicNoticeServlet extends HttpServlet {
         String successMessage = (String) session.getAttribute("successMessage");
         if (successMessage != null) {
             request.setAttribute("successMessage", successMessage);
-            session.removeAttribute("successMessage"); // agar tidak muncul terus
+            session.removeAttribute("successMessage");
         }
 
         request.setAttribute("publicNotices", publicNotices);

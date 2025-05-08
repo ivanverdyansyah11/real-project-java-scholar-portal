@@ -25,7 +25,6 @@ public class CreatePublicNoticeServlet extends HttpServlet {
             publicNotice.setName(name);
             publicNotice.setDescription(description);
 
-            // Assuming no date parsing, remove the ParseException catch block
             PublicNoticeDAO publicNoticeDAO = new PublicNoticeDAO();
             boolean success = publicNoticeDAO.createPublicNotice(publicNotice);
 

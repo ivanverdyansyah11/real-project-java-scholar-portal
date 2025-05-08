@@ -3,7 +3,7 @@
 <%
     Admin admin = (Admin) session.getAttribute("admin");
     Student student = (Student) request.getAttribute("student");
-    PublicNotice publicNotice = (PublicNotice) request.getAttribute("publicNotice"); // Ambil object publicNotice dari request
+    PublicNotice publicNotice = (PublicNotice) request.getAttribute("publicNotice");
 
     if (admin == null) {
         response.sendRedirect("login-admin.jsp");

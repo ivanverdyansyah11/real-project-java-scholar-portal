@@ -65,20 +65,17 @@ public class EditStudentServlet extends HttpServlet {
             StudentDAO studentDAO = new StudentDAO();
             boolean success = studentDAO.updateStudent(student);
 
-            // Check if the request came from a student (profile edit) or an admin
             HttpSession session = request.getSession();
             Student loggedInStudent = (Student) session.getAttribute("student");
 
             if (success) {
                 if (loggedInStudent != null) {
-                    // If this is a student updating their own profile, refresh the session data
                     if (loggedInStudent.getId() == id) {
                         session.setAttribute("student", student);
                     }
                     request.setAttribute("successMessage", "Successfully to update student record");
                     request.getRequestDispatcher("all-student.jsp").forward(request, response);
                 } else {
-                    // Admin is updating a student
                     session.setAttribute("successMessage", "Successfully update student record");
                     response.sendRedirect("AllStudentServlet");
                 }
